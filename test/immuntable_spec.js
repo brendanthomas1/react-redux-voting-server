@@ -8,7 +8,7 @@ describe('immutability', () => {
     }
 
     it('is immutable', () => {
-      let state = 43;
+      let state = 42;
       let nextState = increment(state);
 
       expect(nextState).to.equal(43);
