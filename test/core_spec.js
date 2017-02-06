@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import {List, Map} from 'immutable';
 
-import {setEntries, next} from '../src/core';
+import {setEntries, next, vote} from '../src/core';
 
 describe('application logic', () => {
 
@@ -41,6 +41,54 @@ describe('application logic', () => {
           pair: List.of('Yield', 'Binaural')
         }),
         entries: List.of('Riot Act')
+      }));
+    });
+  });
+
+  describe('vote', () => {
+
+    it('creates a tally for the voted entry', () => {
+      const state = Map({
+        vote: Map({
+          pair: List.of('Ten', 'Vs.')
+        }),
+        entries: List()
+      });
+      const nextState = vote(state, 'Vs.');
+
+      expect(nextState).to.equal(Map({
+        vote: Map({
+          pair: List.of('Ten', 'Vs.'),
+          tally: Map({
+            'Vs.': 1
+          })
+        }),
+        entries: List()
+      }));
+    });
+
+    it('adds to  existing tally for the voted entry', () => {
+      const state = Map({
+        vote: Map({
+          pair: List.of('Ten', 'Vs.'),
+          tally: Map({
+            'Ten': 3,
+            'Vs.': 3
+          })
+        }),
+        entries: List()
+      });
+      const nextState = vote(state, 'Ten');
+
+      expect(nextState).to.equal(Map({
+        vote: Map({
+          pair: List.of('Ten', 'Vs.'),
+          tally: Map({
+            'Ten': 4,
+            'Vs.': 3
+          })
+        }),
+        entries: List()
       }));
     });
   });
