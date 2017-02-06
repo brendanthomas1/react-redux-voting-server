@@ -43,6 +43,49 @@ describe('application logic', () => {
         entries: List.of('Riot Act')
       }));
     });
+
+    it('puts the winner of the current vote back in entries', () => {
+      const state = Map({
+        vote: Map({
+          pair: List.of('Ten', 'Vs.'),
+          tally: Map({
+            'Ten': 4,
+            'Vs.': 2
+          })
+        }),
+        entries: List.of('Vitalogy', 'No Code', 'Yield')
+      });
+
+      const nextState = next(state);
+
+      expect(nextState).to.equal(Map({
+        vote: Map({
+          pair: List.of('Vitalogy', 'No Code')
+        }),
+        entries: List.of('Yield', 'Ten')
+      }));
+    });
+
+    it('puts both from a tied vote back to entries', () => {
+      const state = Map({
+        vote: Map({
+          pair: List.of('Ten', 'Vs.'),
+          tally: Map({
+            'Ten': 3,
+            'Vs.': 3
+          })
+        }),
+        entries: List.of('Vitalogy', 'No Code', 'Yield')
+      });
+      const nextState = next(state);
+
+      expect(nextState).to.equal(Map({
+        vote: Map({
+          pair: List.of('Vitalogy', 'No Code')
+        }),
+        entries: List.of('Yield', 'Ten', 'Vs.')
+      }));
+    });
   });
 
   describe('vote', () => {
